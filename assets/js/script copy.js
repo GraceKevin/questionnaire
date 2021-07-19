@@ -1,130 +1,143 @@
-// Variables
-
-var mainElement = document.querySelector("#main");
-var timerElement = document.querySelector("#timer");
+// Home page
+var mainEl = document.querySelector("#main");
+var timerEl = document.querySelector("#timer");
 var timeLeft = 75;
 var totalPoints = 0;
 var end = false;
 
-// Functions
+    // Global Functions for use in questions
 var points = function() {
     totalPoints = totalPoints + 10;
-    console.log("You have " + totalPoints + "points!");
+    console.log("You have " + totalPoints + " points!");
 }
 var timer = function() {
     var timeInterval = setInterval(() => {
-        if (end === false ) {
-            timerElement.textContent = timeLeft;
+        if (end === false) {
+            timerEl.textContent = timeLeft;
             timeLeft --;
             return timeLeft;
         } else {
-            timerElement.textContent = "";
+            timerEl.textContent = "";
             clearInterval(timeInterval);
         }
     }, 1000);
-
+    
     console.log("TIMER STARTED")
-    if (end === true) {
-        timerElement.textContent = timeLeft;
+    if (end === true){
+        timerEl.textContent = timeLeft;
     }
 }
 
-var highScores = function () {
-    var highScoreContainer = document.createElement("div");
-    highScoreContainer.className = "highScoreContainer";
-    mainElement.appendChild(highScoreContainer);
 
-    // High Score Section
+var highScores = function() {
+        //div
+    var highScoreContainer = document.createElement("div");
+    highScoreContainer.className = "hs-container";
+    mainEl.appendChild(highScoreContainer);
+
+    // high Score TITLE
     var title = document.createElement("h1");
     title.className = "high-score-title";
     title.textContent = "High Scores";
     highScoreContainer.appendChild(title);
 
-    // Display Scores
-    let initials = localStorage.getItem("initials");
-    let score = localStorage.getItem("score");
+    //displays high scores
+        // displays player scores
+    var initals = localStorage.getItem("initals");
+    var score = localStorage.getItem("score");
     var leaderboardScore = document.createElement("p");
     leaderboardScore.className = "leaderboard-score";
-    leaderboardScore.textContent = initials + " - " + score;
+    leaderboardScore.textContent = "1." + initals + " - " + score;
     highScoreContainer.appendChild(leaderboardScore);
 
+
+        //div
     var leaderboard = document.createElement("div");
     leaderboard.className = "leaderboard";
     highScoreContainer.appendChild(leaderboard);
-
-    //create go back button
-    var backButton = document.createElement("button");
-    backButton.className = "back-button";
-    backButton.textContent = "Back";
-    backButton.addEventListener("click", event => {
+        //button "GO BACK"
+    var goBack = document.createElement("button");
+    goBack.className = "go-back-btn";
+    goBack.textContent = "Go Back";
+    goBack.addEventListener("click", event => {
         totalPoints = 0;
         end = false;
-        timeLeft = 100;
+        timeLeft = 75;
         highScoreContainer.remove();
-        start ();
+        start();
     })
-    leaderboard.appendChild(backButton);
-
-    var clearHighScore = document.createElement ("button");
-    clearHighScore.className = "clear-scores";
-    clearHighScore.textContent = "Reset High Scores";
+    leaderboard.appendChild(goBack);
+        // button "CLEAR HIGH SCORE"
+    var clearHighScore = document.createElement("button");
+    clearHighScore.className = "clear-highScore";
+    clearHighScore.textContent = "Clear High Scores";
     clearHighScore.addEventListener("click", event => {
-        // Remove items from localStorage
-        localStorage.removeItem("initials")
+        //remove score from local storage
+        localStorage.removeItem("initals")
+        //remove initals from local storage
         localStorage.removeItem("score")
+        //remove score from leaderboard
         leaderboardScore.remove();
     })
     leaderboard.appendChild(clearHighScore);
 }
 
 var enterScore = function() {
-    var finishContainer = document.createElement("div");
-    finishContainer.className = "finished-container";
-    mainElement.appendChild(finishContainer);
-
-    var finish = document.createElement("h1");
-    finish.textContent = "Complete";
-    finish.className = "finish-title";
-    finishContainer.appendChild(finish);
-
+        // DIV
+    var doneContainer = document.createElement("div");
+    doneContainer.className = "done-container";
+    mainEl.appendChild(doneContainer);
+        // TITLE
+    var done = document.createElement("h1");
+    done.textContent = "All Done!";
+    done.className = "done-title";
+    doneContainer.appendChild(done);
+        // SCORE
     var score = document.createElement("h4");
+    score.textContent = "Your final score is " + totalPoints;
     score.className = "score";
-    score.textContent = "Final Score is: " + totalPoints;
-    finishContainer.appendChild(score);
+    doneContainer.appendChild(score); 
 
+        //div
     var inputContainer = document.createElement("div");
     inputContainer.className = "input-container";
-    finishContainer.appendChild(inputContainer);
+    doneContainer.appendChild(inputContainer);
 
+        // LABEL
     var label = document.createElement("label");
-    label.className = "label";
     label.textContent = "Enter Initials:";
+    label.className = "label";
     label.setAttribute("for", "input");
     inputContainer.appendChild(label);
-
-    var initialInput = document.createElement("Input");
-    initialInput.className = "score-input";
-    initialInput.setAttribute("id", "input")
-    initialInput.setAttribute("name", "input");
-    initialInput.setAttribute("type", "text");
-    inputContainer.appendChild(initialInput);
-
+        // INPUT
+    var initalInput = document.createElement("Input");
+    initalInput.className = "score-input";
+    initalInput.setAttribute("id", "input")
+    initalInput.setAttribute("name", "input");
+    initalInput.setAttribute("type", "text");
+    inputContainer.appendChild(initalInput);
+        //SUBMIT
     var submit = document.createElement("button");
-    submit.className = "submit-btn";
     submit.textContent = "Submit";
+    submit.className = "submit-btn";
     submit.addEventListener("click", event => {
-        var initials = document.getElementById("input").value;
-        localStorage.setItem("initials", JSON.stringify(initials));
-        localStorage.setItem("score", JSON.stringify(totalPoints));
-        finishContainer.remove();
+            // retreives user input
+        var initals = document.getElementById("input").value;
+        //store score in local storage
+        localStorage.setItem("initals", initals);
+        //store initals in local storage
+        localStorage.setItem("score", totalPoints);
+            // remove page content
+        doneContainer.remove();
+        //move to next page
         highScores();
     })
     inputContainer.appendChild(submit);
 }
 
 var questionFive = function() {
-    // execute if wrong answer is chosen
-    var removeWrong = function() {
+    // execute if wrong answer is choosen
+    var removeWrong = function() {;
         questionContainer.remove();
         enterScore();
         console.log("The answer you picked was wrong");
@@ -133,12 +146,12 @@ var questionFive = function() {
         //div
     var questionContainer = document.createElement("div");
     questionContainer.className = "question-container";
-    mainElement.appendChild(questionContainer);
+    mainEl.appendChild(questionContainer);
 
         // question Two
     var question = document.createElement("h1");
     question.className = "question";
-    question.textContent = "Which of the following is not a Javascript data type:";
+    question.textContent = "What's another word for case sensitive";
     questionContainer.appendChild(question);
 
         // question Two Answers
@@ -148,7 +161,7 @@ var questionFive = function() {
             // answer one
     var answerOne = document.createElement("button");
     answerOne.className = "answer-One";
-    answerOne.textContent = "Alert";
+    answerOne.textContent = "1. CamelCasing";
     answerContainer.appendChild(answerOne);
     answerOne.addEventListener("click", event => {
         points();
@@ -160,7 +173,7 @@ var questionFive = function() {
             //answer Two
     var answerTwo = document.createElement("button");
     answerTwo.className = "answer-Two";
-    answerTwo.textContent = "Boolean";
+    answerTwo.textContent = "2. Uppercase";
     answerContainer.appendChild(answerTwo);
     answerTwo.addEventListener("click", event => {
         removeWrong();
@@ -168,7 +181,7 @@ var questionFive = function() {
             // answer Three
     var answerThree = document.createElement("button");
     answerThree.className = "answer-Three";
-    answerThree.textContent = "String";
+    answerThree.textContent = "3. Case Sensitive";
     answerContainer.appendChild(answerThree);
     answerThree.addEventListener("click", event => {
         removeWrong();
@@ -176,7 +189,7 @@ var questionFive = function() {
             // answer Four
     var answerFour = document.createElement("button");
     answerFour.className = "answer-Four";
-    answerFour.textContent = "Number";
+    answerFour.textContent = "4. No Clue";
     answerContainer.appendChild(answerFour);
     answerFour.addEventListener("click", event => {
         removeWrong();
@@ -184,7 +197,7 @@ var questionFive = function() {
 }
 
 var questionFour = function() {
-// execute if wrong answer is chosen
+// execute if wrong answer is choosen
     var removeWrong = function() {
         timeLeft = timeLeft - 10;
         questionContainer.remove();
@@ -195,12 +208,12 @@ var questionFour = function() {
         //div
     var questionContainer = document.createElement("div");
     questionContainer.className = "question-container";
-    mainElement.appendChild(questionContainer);
+    mainEl.appendChild(questionContainer);
 
         // question Two
     var question = document.createElement("h1");
     question.className = "question";
-    question.textContent = "Which of the following creates a looping structure?";
+    question.textContent = "What does assigning a variable null do:";
     questionContainer.appendChild(question);
 
         // question Two Answers
@@ -210,7 +223,7 @@ var questionFour = function() {
             // answer one
     var answerOne = document.createElement("button");
     answerOne.className = "answer-One";
-    answerOne.textContent = "Function";
+    answerOne.textContent = "1. number";
     answerContainer.appendChild(answerOne);
     answerOne.addEventListener("click", event => {
         removeWrong();
@@ -218,7 +231,7 @@ var questionFour = function() {
             //answer Two
     var answerTwo = document.createElement("button");
     answerTwo.className = "answer-Two";
-    answerTwo.textContent = "Var";
+    answerTwo.textContent = "2. string";
     answerContainer.appendChild(answerTwo);
     answerTwo.addEventListener("click", event => {
         removeWrong();
@@ -226,7 +239,7 @@ var questionFour = function() {
             // answer Three
     var answerThree = document.createElement("button");
     answerThree.className = "answer-Three";
-    answerThree.textContent = "Return";
+    answerThree.textContent = "3. undefined";
     answerContainer.appendChild(answerThree);
     answerThree.addEventListener("click", event => {
         removeWrong();
@@ -234,7 +247,7 @@ var questionFour = function() {
             // answer Four
     var answerFour = document.createElement("button");
     answerFour.className = "answer-Four";
-    answerFour.textContent = "While";
+    answerFour.textContent = "4. nothing";
     answerContainer.appendChild(answerFour);
     answerFour.addEventListener("click", event => {
         questionContainer.remove();
@@ -245,7 +258,7 @@ var questionFour = function() {
 }
 
 var questionThree = function() {
-// execute if wrong answer is chosen
+// execute if wrong answer is choosen
     var removeWrong = function() {
         timeLeft = timeLeft - 10;
         questionContainer.remove();
@@ -255,12 +268,12 @@ var questionThree = function() {
         //div
     var questionContainer = document.createElement("div");
     questionContainer.className = "question-container";
-    mainElement.appendChild(questionContainer);
+    mainEl.appendChild(questionContainer);
 
         // question Two
     var question = document.createElement("h1");
     question.className = "question";
-    question.textContent = "Which of the following will create a pop up box?";
+    question.textContent = "Arrays in JavaScript can be used to store __________.";
     questionContainer.appendChild(question);
 
         // question Two Answers
@@ -270,7 +283,7 @@ var questionThree = function() {
             // answer one
     var answerOne = document.createElement("button");
     answerOne.className = "answer-One";
-    answerOne.textContent = "Alert";
+    answerOne.textContent = "1. numbers & strings";
     answerContainer.appendChild(answerOne);
     answerOne.addEventListener("click", event => {
         removeWrong();
@@ -278,7 +291,7 @@ var questionThree = function() {
             //answer Two
     var answerTwo = document.createElement("button");
     answerTwo.className = "answer-Two";
-    answerTwo.textContent = "Confirm";
+    answerTwo.textContent = "2. other arrays";
     answerContainer.appendChild(answerTwo);
     answerTwo.addEventListener("click", event => {
         removeWrong();
@@ -286,7 +299,7 @@ var questionThree = function() {
             // answer Three
     var answerThree = document.createElement("button");
     answerThree.className = "answer-Three";
-    answerThree.textContent = "Prompt";
+    answerThree.textContent = "3. booleans";
     answerContainer.appendChild(answerThree);
     answerThree.addEventListener("click", event => {
         removeWrong();
@@ -294,7 +307,7 @@ var questionThree = function() {
             // answer Four
     var answerFour = document.createElement("button");
     answerFour.className = "answer-Four";
-    answerFour.textContent = "All of the Above";
+    answerFour.textContent = "4. all of the above";
     answerContainer.appendChild(answerFour);
     answerFour.addEventListener("click", event => {
         questionContainer.remove();
@@ -305,7 +318,7 @@ var questionThree = function() {
 }
 
 var questionTwo = function() {
-        // execute if wrong answer is chosen
+        // execute if wrong answer is choosen
     var removeWrong = function() {
         questionThree();
         questionContainer.remove();
@@ -314,12 +327,12 @@ var questionTwo = function() {
         //div
     var questionContainer = document.createElement("div");
     questionContainer.className = "question-container";
-    mainElement.appendChild(questionContainer);
+    mainEl.appendChild(questionContainer);
 
         // question Two
     var question = document.createElement("h1");
     question.className = "question";
-    question.textContent = "Which of the following will comment out in Javascript?";
+    question.textContent = "The condition in an if / else statement is enclosed with ________.";
     questionContainer.appendChild(question);
 
         // question Two Answers
@@ -329,7 +342,7 @@ var questionTwo = function() {
             // answer one
     var answerOne = document.createElement("button");
     answerOne.className = "answer-One";
-    answerOne.textContent = "<!-- -->";
+    answerOne.textContent = "1. quotes";
     answerContainer.appendChild(answerOne);
     answerOne.addEventListener("click", event => {
         removeWrong();
@@ -337,7 +350,7 @@ var questionTwo = function() {
             //answer Two
     var answerTwo = document.createElement("button");
     answerTwo.className = "answer-Two";
-    answerTwo.textContent = "*Comment Out *";
+    answerTwo.textContent = "2. curly brackets";
     answerContainer.appendChild(answerTwo);
     answerTwo.addEventListener("click", event => {
         removeWrong();
@@ -345,7 +358,7 @@ var questionTwo = function() {
             // answer Three
     var answerThree = document.createElement("button");
     answerThree.className = "answer-Three";
-    answerThree.textContent = " // ";
+    answerThree.textContent = "3. parenthesis";
     answerContainer.appendChild(answerThree);
     answerThree.addEventListener("click", event => {
         questionContainer.remove();
@@ -356,7 +369,7 @@ var questionTwo = function() {
             // answer Four
     var answerFour = document.createElement("button");
     answerFour.className = "answer-Four";
-    answerFour.textContent = "*/ ... /*";
+    answerFour.textContent = "4. square brackets";
     answerContainer.appendChild(answerFour);
     answerFour.addEventListener("click", event => {
         removeWrong();
@@ -364,7 +377,7 @@ var questionTwo = function() {
 }
 
 var questionOne = function() {
-        // execute if wrong answer is chosen
+        // execute if wrong answer is choosen
     var removeWrong = function() {
         timeLeft = timeLeft - 10;
         questionContainer.remove();
@@ -374,12 +387,12 @@ var questionOne = function() {
         //div
     var questionContainer = document.createElement("div");
     questionContainer.className = "question-container";
-    mainElement.appendChild(questionContainer);
+    mainEl.appendChild(questionContainer);
 
         //question One
     var question = document.createElement("h1");
     question.className = "question";
-    question.textContent = "What can be used to display additional information in the developer tools?";
+    question.textContent = "Commonly Used data types DO NOT Include:";
     questionContainer.appendChild(question);
 
         //question One Answers
@@ -389,7 +402,7 @@ var questionOne = function() {
             // answer One
     var answerOne = document.createElement("button");
     answerOne.className = "answer-One";
-    answerOne.textContent = "Btn";
+    answerOne.textContent = "1. strings";
     answerContainer.appendChild(answerOne);
     answerOne.addEventListener("click", event => {
         removeWrong();
@@ -397,7 +410,7 @@ var questionOne = function() {
             // answer Two
     var answerTwo = document.createElement("button");
     answerTwo.className = "answer-Two";
-    answerTwo.textContent = "Array";
+    answerTwo.textContent = "2. booleans";
     answerContainer.appendChild(answerTwo);
     answerTwo.addEventListener("click", event => {
         removeWrong();
@@ -405,7 +418,7 @@ var questionOne = function() {
             // answer Three
     var answerThree = document.createElement("button");
     answerThree.className = "answer-Three";
-    answerThree.textContent = "console.log";
+    answerThree.textContent = "3. alerts";
     answerContainer.appendChild(answerThree);
     answerThree.addEventListener("click", event => {
         questionContainer.remove();
@@ -416,7 +429,7 @@ var questionOne = function() {
             // answer Four
     var answerFour = document.createElement("button");
     answerFour.className = "answer-Four";
-    answerFour.textContent = "Prompt";
+    answerFour.textContent = "4. numbers";
     answerContainer.appendChild(answerFour);
     answerFour.addEventListener("click", event => {
         removeWrong();
@@ -425,36 +438,38 @@ var questionOne = function() {
 }
 
 var start = function() {
-    //div
-var container = document.createElement("div");
-container.className = "home-container"
-mainElement.appendChild(container);
+        //div
+    var container = document.createElement("div");
+    container.className = "home-container"
+    mainEl.appendChild(container);
 
-    // start page title
-var homeHeader = document.createElement("h1");
-homeHeader.className = "home-title";
-homeHeader.textContent = "Coding Quiz Challenge";
-container.appendChild(homeHeader);
+        // start page title
+    var homeHeader = document.createElement("h1");
+    homeHeader.className = "home-title";
+    homeHeader.textContent = "Coding Quiz Challenge";
+    container.appendChild(homeHeader);
 
-    // start page paragraph
-var homeParagraph = document.createElement("p");
-homeParagraph.className = "home-text-p";
-homeParagraph.textContent = "Welcome to your Javascript coding quiz. You will have 75 seconds to answer the questions. Should you get a question wrong, your time will reduce by 10 seconds."
-container.appendChild(homeParagraph);
+        // start page paragraph
+    var homeParagraph = document.createElement("p");
+    homeParagraph.className = "home-text-p";
+    homeParagraph.textContent = "Try to answer the following code-related" +
+    " questions within the time limit. Keep in mind that incorrect answer will" +
+    " penalize your score/time by ten seconds!"
+    container.appendChild(homeParagraph);
 
-    // start quick button
-var startQuizBtn = document.createElement("button");
-startQuizBtn.className = "home-btn";
-startQuizBtn.textContent = "Start Quiz";
-container.appendChild(startQuizBtn);
+        // start quick button
+    var startQuizBtn = document.createElement("button");
+    startQuizBtn.className = "home-btn";
+    startQuizBtn.textContent = "Start Quiz";
+    container.appendChild(startQuizBtn);
 
-    // removes home page elements
-startQuizBtn.addEventListener("click", event => {
-    timer();
-    startQuizBtn.remove();
-    homeHeader.remove();
-    homeParagraph.remove();
-    questionOne();
-});
+        // removes home page elements
+    startQuizBtn.addEventListener("click", event => {
+        timer();
+        startQuizBtn.remove();
+        homeHeader.remove();
+        homeParagraph.remove();
+        questionOne();
+    });
 }
 start();
