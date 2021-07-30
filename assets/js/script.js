@@ -64,6 +64,7 @@ var endScene = function() {
         usersName = document.querySelector("input").value;
         if (!usersName) {
             alert("Please enter your initials");
+            //console.log("users name")
             return;
         }
         saveScore (usersName, correctElement, timer);
