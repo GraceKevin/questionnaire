@@ -39,10 +39,29 @@ var timer = function() {
 }
 
 // Move from initial start page into questions
+var startCodeQuiz = function() {
+    // Pull from question container
+    var questionElement = document.createElement ("section");
+    questionElement.setAttribute("id", "question-section");
+    questionElement.className = "questions-group";
+    // Continue questions
+    questionElement.innerHTML = questionContainer[questionCounter];
+    // Begin Timer
+    timerElement.textContent = timer;
+}
 
 // Move from question to question
+var cycleQuestion = function() {
+
+}
 
 // Move from questions to End Scene
 //Display End Score and Time
+var endScene = function() {
+    clearInterval(timerInterval);
+}
 
 // Move from prior screens into Leaderboard
+var leaderBoard = function() {
+    
+}
