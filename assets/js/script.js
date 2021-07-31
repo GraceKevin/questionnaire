@@ -2,7 +2,7 @@
 //  https://www.youtube.com/watch?v=f4fB9Xg2JEY&t=262s
 //  https://www.youtube.com/watch?v=LQGTb112N_c
 //  https://www.youtube.com/watch?v=riDzcEQbX6k
-// 
+//  https://www.youtube.com/watch?v=y17RuWkWdn8
 //
 // Create initial variables
 
@@ -12,62 +12,37 @@ var timerElement;
 var scoresElement;
 
 // Button
-const startButton = document.getElementById("startBtn")
+var startButton;
+var endButton;
+var backButton;
 
 // Timers
 var timer;
 var timeInterval;
 var questionCounter;
+var correctCounter;
 
-startButton.addEventListener('click', startGame)
+// Questions
+var questionContainer = [
+    // Questions and Answers go here
+]
 
-function startGame() {
-    //console.log('started');
-    startButton.classList.add("hide")
-}
-
-
-var timerStart = function() {
-    timeInterval = setInterval(function() {
+var timer = function() {
+    timerInterval = setInterval(() => {
         if (timer <= 0) {
-            //endScene()
+            // Push End Scene
+        } // Or else reduce timer
+        else {
+            timer--;
         }
-    })
+    }, 1000);
 }
 
-var endScene = function() {
-    // Clear time interval
-    clearInterval(timeInterval);
-    
-    // pull questions and answers
-    var questionElement = document.querySelector(".question-flex");
-    var answerElement = document.querySelector(".answer");
+// Move from initial start page into questions
 
-    // show end scene
-    var endSceneElement = document.createElement("section");
-    endSceneElement.setAttribute("id", "end-scene");
-    endSceneElement.className = "end-scene";
-    endSceneElement.innerHTML = '<h2>Congratulations</h2>'
-    questionElement.replaceWith(endSceneElement);
-    answerElement.remove();
+// Move from question to question
 
-    // buttons and event listeners
-    var endButtonElement = document.querySelector(".save-button button");
-    endButtonElement.addEventListener ("click", function() {
-        endButtonElement.className = "end-button-click";
-        //console.log("end button was clicked")
-    })
-    endButtonElement.addEventListener("click", function(event) {
-        event.preventDefault();
+// Move from questions to End Scene
+//Display End Score and Time
 
-        // Check for player to enter their information 
-        usersName = document.querySelector("input").value;
-        if (!usersName) {
-            alert("Please enter your initials");
-            //console.log("users name")
-            return;
-        }
-        saveScore (usersName, correctElement, timer);
-        loadHighScores();
-    });
-}
+// Move from prior screens into Leaderboard
